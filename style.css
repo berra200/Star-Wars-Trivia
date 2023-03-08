@@ -1,1 +1,8 @@
-/*# sourceMappingURL=style.css.map */
+@import url("https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css") layer(bulma);
+@layer bulma, special;
+@layer special {
+  .dropdown-content {
+    max-height: 600px;
+    overflow-y: scroll;
+  }
+}/*# sourceMappingURL=style.css.map */
