@@ -1,17 +1,6 @@
 @import url("https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css") layer(bulma);
 @layer bulma, special;
 @layer special {
-  .dropdown-content {
-    max-height: 600px;
-    overflow-y: scroll;
-  }
-  .dropdown-content :hover {
-    background-color: #3e8ed0;
-    color: white;
-  }
-  .dropdown-content .selected {
-    background-color: aqua;
-  }
   select {
     border-color: #dbdbdb;
     padding-bottom: calc(0.5em - 1px);
@@ -20,5 +9,12 @@
     padding-top: calc(0.5em - 1px);
     font-size: 1rem;
     border-radius: 4px;
+  }
+  select:focus {
+    outline: none;
+  }
+  .select-err {
+    color: red;
+    font-size: 0.75rem;
   }
 }/*# sourceMappingURL=style.css.map */
