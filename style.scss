@@ -6,5 +6,27 @@
     .dropdown-content {
         max-height: 600px;
         overflow-y: scroll;
+        :hover {
+            background-color: #3e8ed0;
+            color: white;
+        }
+
+        .selected {
+            background-color: aqua;
+        }
+
+        .disabled {
+
+        }
+    }
+
+    select {
+        border-color: #dbdbdb;
+        padding-bottom: calc(0.5em - 1px);
+        padding-left: 1em;
+        padding-right: 1em;
+        padding-top: calc(0.5em - 1px);
+        font-size: 1rem;
+        border-radius: 4px;
     }
 }
