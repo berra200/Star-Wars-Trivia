@@ -1,18 +1,20 @@
+let selects = document.querySelectorAll("select")
+
 const starWarsApi = "https://swapi.dev/api"
 let allPeopleData = []
-let leftPerson
-let rightPerson
+let leftPerson = {name: "left"}
+let rightPerson = {name: "right"}
 
 class Character {
-    constructor(name, gender, height, mass, hairColor, skinColor, eyeColor, movies, pictureUrl) {
+    constructor({name, gender, height, mass, hair_color, skin_color, eye_color, films, pictureUrl}) {
         this.name = name,
         this.gender = gender,
         this.height = height,
         this.mass = mass,
-        this.hairColor = hairColor,
-        this.skinColor = skinColor,
-        this.eyeColor = eyeColor,
-        this.movies = movies,
+        this.hairColor = hair_color,
+        this.skinColor = skin_color,
+        this.eyeColor = eye_color,
+        this.movies = films,
         this.pictureUrl = pictureUrl
     }
 }
@@ -31,7 +33,7 @@ const getAllPeople = async () => {
     for (let i = 0; i < 20; i++) {
         if (i === 0 || data.next !== null) {
             data = await apiGet(starWarsApi + (i === 0 ? `/people` : `/people?page=${i + 1}`))
-            data.results.forEach(person => allPeopleData.push({...person, selected: false}))
+            data.results.forEach(person => allPeopleData.push(person))
             allPeopleData.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
             renderDropdowns()
         } else {
@@ -42,25 +44,23 @@ const getAllPeople = async () => {
 }
 
 const renderDropdowns = () => {
-    let dropdowns = document.querySelectorAll(".dropdown-content")
-    dropdowns.forEach(elem => elem.innerHTML = "")
-    allPeopleData.forEach((person, index) => {
-        dropdowns.forEach(dropdown => {
-            let listItem = document.createElement("div")
-            listItem.classList.add("dropdown-item", "is-clickable", person.selected&& "selected")
-            listItem.innerText = person.name
-            dropdown.append(listItem)
-            
-            listItem.addEventListener("mousedown", (() => {
-                const left = dropdown.classList.contains("left")
-                const header = document.querySelector(`#${left ? "left" : "right"}-container h2`)
-                header.innerText = person.name
-                left ? leftPerson = person : rightPerson = person
-                allPeopleData[index].selected = true
-                renderDropdowns()
-            }))
+    selects.forEach(select => {
+        const value = select.value
+        if (value === "Välj en karaktär") {
+            select.innerHTML = "<option disabled hidden selected>Välj en karaktär</option>"
+        } else {
+            select.innerHTML = ""
+        }
+        allPeopleData.forEach((person, index) => {
+            let option = document.createElement("option")
+            option.innerText = person.name
+            // remember its value if already changed before loading is done
+            if (value === person.name) {
+                option.selected = true
+            }
+            select.append(option)
         })
-    })    
+    })
 }
 
 
@@ -70,6 +70,32 @@ const renderDropdowns = () => {
 document.querySelectorAll(".dropdown-trigger").forEach(async (button, index) => {
     button.addEventListener("click", () => { document.querySelector(`#dropdown-menu-${index === 0 ? "left" : "right"}`).classList.toggle("is-hidden")})
     button.addEventListener("focusout", () => { document.querySelector(`#dropdown-menu-${index === 0 ? "left" : "right"}`).classList.add("is-hidden")})
+})
+
+selects.forEach((select) => {
+    select.addEventListener("change", function() {
+        if (this.id === "left-select") {
+            allPeopleData.forEach(person => person.name === this.value&& (leftPerson = new Character(person)))
+            document.querySelector("#left-container h2").innerText = leftPerson.name
+        } else {
+            allPeopleData.forEach(person => person.name === this.value&& (rightPerson = new Character(person)))
+            document.querySelector("#right-container h2").innerText = rightPerson.name
+        }
+
+        // Error message if both select are the same
+        if (leftPerson.name === rightPerson.name) {
+            selects.forEach((select) => {
+                select.style.borderColor = "red"
+            })
+            document.querySelectorAll(".select-err").forEach(err => err.innerText = "Du kan inte jämnföra samma person.")
+        } else {
+            selects.forEach((select) => {
+                select.style.borderColor = "#dbdbdb"
+            })
+            document.querySelectorAll(".select-err").forEach(err => err.innerText = "")
+        }
+
+    })
 })
 
 //? Running code -----------------------------------------------------------------------
