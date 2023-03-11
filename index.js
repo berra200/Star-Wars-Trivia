@@ -1,6 +1,15 @@
 let selects = document.querySelectorAll("select")
 
 const starWarsApi = "https://swapi.dev/api"
+const googleApi = "https://customsearch.googleapis.com/customsearch/v1"
+let googleParams = new URLSearchParams({
+    key: "AIzaSyAxw21qUiSOhWy4Nc4yrxn88It6Lb5f0mM", 
+    cx: "648b92f1a63e44d8c", 
+    searchType: "image"
+})
+
+
+
 let allPeopleData = []
 let leftPerson = {name: "left"}
 let rightPerson = {name: "right"}
@@ -25,6 +34,17 @@ const apiGet = async str => {
     const res = await fetch(str)
     const data = await res.json()
     return data
+}
+
+
+// Searches google for a picture of input string
+const getPicture = async (str) => {
+    googleParams.append("q", str)
+    console.log(`${googleApi}?${googleParams}`)
+    const data = await apiGet(`${googleApi}?${googleParams}`)
+    googleParams.delete("q")
+    console.log(data)
+    return data.items[0].link
 }
 
 // Fetches all people and continuesly updates the lists
@@ -66,19 +86,16 @@ const renderDropdowns = () => {
 
 //? Event listeners --------------------------------------------------------------------
 
-// Dropdown show/hide
-document.querySelectorAll(".dropdown-trigger").forEach(async (button, index) => {
-    button.addEventListener("click", () => { document.querySelector(`#dropdown-menu-${index === 0 ? "left" : "right"}`).classList.toggle("is-hidden")})
-    button.addEventListener("focusout", () => { document.querySelector(`#dropdown-menu-${index === 0 ? "left" : "right"}`).classList.add("is-hidden")})
-})
-
+// Dropdown
 selects.forEach((select) => {
-    select.addEventListener("change", function() {
+    select.addEventListener("change", async function() {
         if (this.id === "left-select") {
             allPeopleData.forEach(person => person.name === this.value&& (leftPerson = new Character(person)))
+            document.querySelector("#left-container img").src = await getPicture(leftPerson.name)
             document.querySelector("#left-container h2").innerText = leftPerson.name
         } else {
             allPeopleData.forEach(person => person.name === this.value&& (rightPerson = new Character(person)))
+            document.querySelector("#right-container img").src = await getPicture(rightPerson.name)
             document.querySelector("#right-container h2").innerText = rightPerson.name
         }
 
@@ -101,3 +118,4 @@ selects.forEach((select) => {
 //? Running code -----------------------------------------------------------------------
 
 getAllPeople() // Fetches all people and fills the dropdown
+
