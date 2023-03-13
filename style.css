@@ -1,6 +1,12 @@
 @import url("https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css") layer(bulma);
 @layer bulma, special;
 @layer special {
+  img {
+    width: 300px;
+    height: 400px;
+    -o-object-fit: contain;
+       object-fit: contain;
+  }
   select {
     border-color: #dbdbdb;
     padding-bottom: calc(0.5em - 1px);

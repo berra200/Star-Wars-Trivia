@@ -1,4 +1,5 @@
 let selects = document.querySelectorAll("select")
+let compareBtn = document.querySelector("#compare-button")
 
 const starWarsApi = "https://swapi.dev/api"
 
@@ -53,14 +54,13 @@ const getAllPeople = async () => {
             break // Exits the for loop when there are no more data to fetch
         }
     }
-    console.log(allPeopleData)
 }
 
 const renderDropdowns = () => {
     selects.forEach(select => {
         const value = select.value
-        if (value === "Välj en karaktär") {
-            select.innerHTML = "<option disabled hidden selected>Välj en karaktär</option>"
+        if (value === "Choose character!") {
+            select.innerHTML = "<option disabled hidden selected>Choose character!</option>"
         } else {
             select.innerHTML = ""
         }
@@ -74,6 +74,37 @@ const renderDropdowns = () => {
             select.append(option)
         })
     })
+}
+
+const compareHighest = (leftNum, rightNum) => {
+    if([leftNum, rightNum].includes(undefined)) {
+        return undefined
+    } else if (leftNum > rightNum) {
+        return {
+            side: "left",
+            name: leftPerson.name,
+            value: leftNum,
+        }
+    } else if (rightNum > leftNum) {
+        return {
+            side: "right",
+            name: rightPerson.name,
+            value: rightNum,
+        }
+    } else {
+        return {
+            side: "same",
+            value: leftNum,
+        }
+    }
+}
+
+const compareSame = (str1, str2) => {
+    if (str1 === str2) {
+        return true
+    } else {
+        return false
+    }
 }
 
 
@@ -106,6 +137,62 @@ selects.forEach((select) => {
         }
 
     })
+})
+
+// Compare button
+compareBtn.addEventListener("click", () => {
+    const leftUl = document.querySelector("#left-container ul")
+    const rightUl = document.querySelector("#right-container ul")
+    const result = document.querySelector("#compare-list")
+
+    leftUl.innerHTML = ""
+    rightUl.innerHTML = ""
+    result.innerHTML = ""
+
+    for (let i = 0; i < 2; i++) {
+        let list = i === 0 ? leftUl : rightUl
+        list.innerHTML = `
+        <li><strong>Haircolor:</strong> ${i === 0 ? leftPerson.hairColor : rightPerson.hairColor}</li>
+        <li><strong>Length:</strong> ${i === 0 ? leftPerson.length : rightPerson.length}</li>
+        <li><strong>Weight:</strong> ${i === 0 ? leftPerson.mass : rightPerson.mass}</li>
+        <li><strong>Gender:</strong> ${i === 0 ? leftPerson.gender : rightPerson.gender}</li>
+        <li><strong>Skintone:</strong> ${i === 0 ? leftPerson.skinColor : rightPerson.skinColor}</li>
+        <li><strong>Eyecolor:</strong> ${i === 0 ? leftPerson.eyeColor : rightPerson.eyeColor}</li>
+        <li><strong>Number of movies:</strong> ${i === 0 ? leftPerson.movies.length : rightPerson.movies.length}</li>
+        `
+    }
+
+        const tallest = compareHighest(leftPerson.length, rightPerson.length)
+        const heaviest = compareHighest(leftPerson.mass, rightPerson.mass)
+        const numberOfMovies = compareHighest(leftPerson.movies.length, rightPerson.movies.length)
+        const sameGender = compareSame(leftPerson.gender, rightPerson.gender)
+        const sameHairColor = compareSame(leftPerson.hairColor, rightPerson.hairColor)
+        const sameSkinColor = compareSame(leftPerson.skinColor, rightPerson.skinColor)
+
+    if (tallest !== undefined) {
+        result.innerHTML = tallest.side === "same" ?
+            `<li>Both ${leftPerson.name} and ${rightPerson.name} are the same length.</li>` :
+            `<li>${tallest.name} on the ${tallest.side} side is the tallest.</li>`
+    }
+    if (heaviest !== undefined) {
+        result.innerHTML += heaviest.side === "same" ?
+            `<li>Both ${leftPerson.name} and ${rightPerson.name} weigh the same.</li>` :
+            `<li>${heaviest.name} on the ${heaviest.side} side wheigh the most.</li>`
+    }
+    if (numberOfMovies !== undefined) {
+        result.innerHTML += numberOfMovies.side === "same" ?
+            `<li>They have both starred ${numberOfMovies} movies.</li>` :
+            `<li>${numberOfMovies.name} on the ${numberOfMovies.side} side have played in the most movies.</li>`
+    }
+    result.innerHTML += sameGender ?
+        `<li>They are both of the same gender.</li>` :
+        `<li>They are not of the same gender.</li>`
+    result.innerHTML += sameHairColor ?
+        `<li>They both have the same haircolor.</li>` :
+        `<li>They do not have the same haircolor.</li>`
+    result.innerHTML += sameSkinColor ?
+        `<li>They are both ${leftPerson.skinColor} skintone.</li>` :
+        `<li>They are of different skintones.</li>`
 })
 
 //? Running code -----------------------------------------------------------------------

@@ -12,26 +12,31 @@
 <body>
     <h1 class="title is-2">Star Wars Trivia!</h1>
     <div class="is-flex is-justify-content-space-between">
-        <div id="left-container" class="is-flex is-flex-direction-column">
+        <div id="left-container" class="is-flex is-flex-direction-column is-align-items-center">
             <p class="select-err"></p>
             <select id="left-select">
-                <option disabled hidden selected>Välj en karaktär</option>
+                <option disabled hidden selected>Choose character!</option>
             </select>
             <img src="" alt="">
-            <h2 class="title is-4">Ingen vald</h2>
+            <h2 class="title is-4"></h2>
+            <ul></ul>
         </div>
 
-        <div id="right-container" class="is-flex is-flex-direction-column">
+        <button id="compare-button" class="button is-info">Compare!</button>
+
+        <div id="right-container" class="is-flex is-flex-direction-column is-align-items-center">
             <p class="select-err"></p>
             <select id="right-select">
-                <option disabled hidden selected>Välj en karaktär</option>
+                <option disabled hidden selected>Choose character!</option>
             </select>
             <img src="" alt="">
-            <h2 class="title is-4">Ingen vald</h2>
+            <h2 class="title is-4"></h2>
+            <ul></ul>
         </div>
     </div>
-    <div class="is-flex is-flex-direction-column is-align-items-center">
-        <button class="button is-info">Jämnför!</button>
+
+    <div class="is-flex is-justify-content-center">
+        <ul id="compare-list"></ul>
     </div>
 </body>
 </html>
