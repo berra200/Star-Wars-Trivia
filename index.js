@@ -1,5 +1,8 @@
 let selects = document.querySelectorAll("select")
 let compareBtn = document.querySelector("#compare-button")
+const leftUl = document.querySelector("#left-container ul")
+const rightUl = document.querySelector("#right-container ul")
+const result = document.querySelector("#compare-list")
 
 const starWarsApi = "https://swapi.dev/api"
 
@@ -113,6 +116,9 @@ const compareSame = (str1, str2) => {
 // Dropdown
 selects.forEach((select) => {
     select.addEventListener("change", async function() {
+        leftUl.innerHTML = ""
+        rightUl.innerHTML = ""
+        result.innerHTML = ""
         if (this.id === "left-select") {
             allPeopleData.forEach(person => person.name === this.value&& (leftPerson = new Character(person)))
             document.querySelector("#left-container img").src = leftPerson.pictureUrl
@@ -141,13 +147,16 @@ selects.forEach((select) => {
 
 // Compare button
 compareBtn.addEventListener("click", () => {
-    const leftUl = document.querySelector("#left-container ul")
-    const rightUl = document.querySelector("#right-container ul")
-    const result = document.querySelector("#compare-list")
-
     leftUl.innerHTML = ""
     rightUl.innerHTML = ""
     result.innerHTML = ""
+    
+    const tallest = compareHighest(leftPerson.length, rightPerson.length)
+    const heaviest = compareHighest(leftPerson.mass, rightPerson.mass)
+    const numberOfMovies = compareHighest(leftPerson.movies.length, rightPerson.movies.length)
+    const sameGender = compareSame(leftPerson.gender, rightPerson.gender)
+    const sameHairColor = compareSame(leftPerson.hairColor, rightPerson.hairColor)
+    const sameSkinColor = compareSame(leftPerson.skinColor, rightPerson.skinColor)
 
     for (let i = 0; i < 2; i++) {
         let list = i === 0 ? leftUl : rightUl
@@ -162,12 +171,6 @@ compareBtn.addEventListener("click", () => {
         `
     }
 
-        const tallest = compareHighest(leftPerson.length, rightPerson.length)
-        const heaviest = compareHighest(leftPerson.mass, rightPerson.mass)
-        const numberOfMovies = compareHighest(leftPerson.movies.length, rightPerson.movies.length)
-        const sameGender = compareSame(leftPerson.gender, rightPerson.gender)
-        const sameHairColor = compareSame(leftPerson.hairColor, rightPerson.hairColor)
-        const sameSkinColor = compareSame(leftPerson.skinColor, rightPerson.skinColor)
 
     if (tallest !== undefined) {
         result.innerHTML = tallest.side === "same" ?
