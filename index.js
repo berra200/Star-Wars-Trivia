@@ -1,21 +1,16 @@
 let selects = document.querySelectorAll("select")
 
 const starWarsApi = "https://swapi.dev/api"
-const googleApi = "https://customsearch.googleapis.com/customsearch/v1"
-let googleParams = new URLSearchParams({
-    key: "AIzaSyAxw21qUiSOhWy4Nc4yrxn88It6Lb5f0mM", 
-    cx: "648b92f1a63e44d8c", 
-    searchType: "image"
-})
-
-
 
 let allPeopleData = []
+let allPeopleRawData = []
 let leftPerson = {name: "left"}
 let rightPerson = {name: "right"}
 
+
 class Character {
-    constructor({name, gender, height, mass, hair_color, skin_color, eye_color, films, pictureUrl}) {
+    constructor({id, name, gender, height, mass, hair_color, skin_color, eye_color, films, pictureUrl}) {
+        this.id = id
         this.name = name,
         this.gender = gender,
         this.height = height,
@@ -37,23 +32,21 @@ const apiGet = async str => {
 }
 
 
-// Searches google for a picture of input string
-const getPicture = async (str) => {
-    googleParams.append("q", str)
-    console.log(`${googleApi}?${googleParams}`)
-    const data = await apiGet(`${googleApi}?${googleParams}`)
-    googleParams.delete("q")
-    console.log(data)
-    return data.items[0].link
-}
-
 // Fetches all people and continuesly updates the lists
 const getAllPeople = async () => {
     let data
-    for (let i = 0; i < 20; i++) {
+    const pictureData = await apiGet(`https://rawcdn.githack.com/akabab/starwars-api/0.2.1/api/all.json`)
+    for (let i = 0; i < 10; i++) {
         if (i === 0 || data.next !== null) {
             data = await apiGet(starWarsApi + (i === 0 ? `/people` : `/people?page=${i + 1}`))
-            data.results.forEach(person => allPeopleData.push(person))
+            data.results.forEach(person => {
+                const id = allPeopleData.length + 1 > 16 ? allPeopleData.length + 2 : allPeopleData.length + 1
+                allPeopleData.push({
+                    ...person,
+                    id,
+                    pictureUrl: pictureData[allPeopleData.length].image
+                })
+            })
             allPeopleData.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
             renderDropdowns()
         } else {
@@ -91,11 +84,11 @@ selects.forEach((select) => {
     select.addEventListener("change", async function() {
         if (this.id === "left-select") {
             allPeopleData.forEach(person => person.name === this.value&& (leftPerson = new Character(person)))
-            document.querySelector("#left-container img").src = await getPicture(leftPerson.name)
+            document.querySelector("#left-container img").src = leftPerson.pictureUrl
             document.querySelector("#left-container h2").innerText = leftPerson.name
         } else {
             allPeopleData.forEach(person => person.name === this.value&& (rightPerson = new Character(person)))
-            document.querySelector("#right-container img").src = await getPicture(rightPerson.name)
+            document.querySelector("#right-container img").src = rightPerson.pictureUrl
             document.querySelector("#right-container h2").innerText = rightPerson.name
         }
 
