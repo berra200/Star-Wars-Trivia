@@ -122,10 +122,12 @@ selects.forEach((select) => {
         if (this.id === "left-select") {
             allPeopleData.forEach(person => person.name === this.value&& (leftPerson = new Character(person)))
             document.querySelector("#left-container img").src = leftPerson.pictureUrl
+            document.querySelector("#left-container img").alt = `Picture of ${leftPerson.name}`
             document.querySelector("#left-container h2").innerText = leftPerson.name
         } else {
             allPeopleData.forEach(person => person.name === this.value&& (rightPerson = new Character(person)))
             document.querySelector("#right-container img").src = rightPerson.pictureUrl
+            document.querySelector("#right-container img").alt = `Picture of ${rightPerson.name}`
             document.querySelector("#right-container h2").innerText = rightPerson.name
         }
 
@@ -150,7 +152,7 @@ compareBtn.addEventListener("click", () => {
     leftUl.innerHTML = ""
     rightUl.innerHTML = ""
     result.innerHTML = ""
-    
+
     const tallest = compareHighest(leftPerson.length, rightPerson.length)
     const heaviest = compareHighest(leftPerson.mass, rightPerson.mass)
     const numberOfMovies = compareHighest(leftPerson.movies.length, rightPerson.movies.length)

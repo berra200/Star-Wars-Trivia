@@ -8,6 +8,7 @@
        object-fit: contain;
   }
   select {
+    width: 300px;
     border-color: #dbdbdb;
     padding-bottom: calc(0.5em - 1px);
     padding-left: 1em;
