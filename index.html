@@ -9,34 +9,61 @@
     <script type="module" src="index.js" defer></script>
     <title>Star Wars Trivia</title>
 </head>
-<body>
-    <h1 class="title is-2">Star Wars Trivia!</h1>
-    <div class="is-flex is-justify-content-space-between">
-        <div id="left-container" class="is-flex is-flex-direction-column is-align-items-center">
-            <p class="select-err"></p>
-            <select id="left-select">
-                <option disabled hidden selected>Choose character!</option>
-            </select>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Star_wars2.svg/1200px-Star_wars2.svg.png" alt="Star wars logo">
-            <h2 class="title is-4"></h2>
-            <ul></ul>
+<body class="is-flex is-flex-direction-column is-align-items-center">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Star_wars2.svg/1200px-Star_wars2.svg.png" alt="Star wars logo">
+    <main>
+        <div class="is-flex is-justify-content-space-between">
+            <div id="left-container" class="left-container is-flex is-flex-direction-column is-align-items-center">
+                <select id="left-select" class="character-select">
+                    <p class="select-err"></p>
+                    <option disabled hidden selected>Choose character!</option>
+                    <option disabled>Loading...</option>
+                </select>
+                <img class="character-img placeholder" src="./images/choose-character.png" alt="Star wars logo">
+                <h2 class="title is-4"></h2>
+                <ul></ul>
+            </div>
+    
+            <div class="middle-container is-flex is-flex-direction-column is-align-items-center is-justify-content-flex-end">
+                <img id="vs-logo" src="./images/vs-logo.jpg" alt="">
+                <button id="compare-button" class="button">Fight!</button>
+            </div>
+    
+            <div id="right-container" class="right-container is-flex is-flex-direction-column is-align-items-center">
+                <select id="right-select" class="character-select">
+                    <p class="select-err"></p>
+                    <option disabled hidden selected>Choose character!</option>
+                    <option disabled>Loading...</option>
+                </select>
+                <img class="character-img placeholder" src="./images/choose-character.png" alt="Star wars logo">
+                <h2 class="title is-4"></h2>
+                <ul></ul>
+            </div>
         </div>
-
-        <button id="compare-button" class="button is-info">Compare!</button>
-
-        <div id="right-container" class="is-flex is-flex-direction-column is-align-items-center">
-            <p class="select-err"></p>
-            <select id="right-select">
-                <option disabled hidden selected>Choose character!</option>
-            </select>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Star_wars2.svg/1200px-Star_wars2.svg.png" alt="Star wars logo">
-            <h2 class="title is-4"></h2>
-            <ul></ul>
+    
+        <div class="is-flex is-justify-content-space-between mt-3">
+            <div class="left-container is-flex is-flex-direction-column">
+                <select class="more-info">
+                    <option selected hidden disabled>More info</option>
+                    <option value="first-shown">First shown</option>
+                    <option value="Movies-both-attended-in">Movies both attended in</option>
+                    <option value="Compare-homeplanet">Compare homeplanet</option>
+                    <option value="Most-valuble-vehicle">Most valuble vehicle</option>
+                </select>
+            </div>
+            <div class="info-container is-flex is-flex-direction-column mx-2">
+                <ul id="compare-list"></ul>
+            </div>
+            <div class="right-container is-flex is-flex-direction-column">
+                <select class="more-info">
+                    <option selected hidden disabled>More info</option>
+                    <option value="first-shown">First shown</option>
+                    <option value="Movies-both-attended-in">Movies both attended in</option>
+                    <option value="Compare-homeplanet">Compare homeplanet</option>
+                    <option value="Most-valuble-vehicle">Most valuble vehicle</option>
+                </select>
+            </div>
         </div>
-    </div>
-
-    <div class="is-flex is-justify-content-center">
-        <ul id="compare-list"></ul>
-    </div>
+    </main>
 </body>
 </html>

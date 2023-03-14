@@ -3,24 +3,84 @@
 @import url("https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css") layer(bulma);
 
 @layer special {
+    body {
+        background-image: url(./images/star-wars-bg.jpg);
+        background-size: cover;
+        background-position: top;
+        height: 100vh;
+    }
+
     img {
+        max-width: 300px;
+    }
+
+    .placeholder {
+        filter: invert(100%);
+        mix-blend-mode: lighten;
+    }
+    
+    #vs-logo {
+        mix-blend-mode: multiply;
+        padding: 8px;    
+    }
+
+    .middle-container {
+        height: 420px;
+        img {
+            padding: 30px 0px;
+        }
+        button {
+            padding: 8px 35px;
+            background-color: #000000b1;
+            color: white;
+            border-color: #000000;
+
+            &:hover {
+                background-color: #000000;
+            }
+        }
+    }
+
+    .left-container,
+    .right-container,
+    .info-container {
         width: 300px;
-        height: 400px;
-        object-fit: contain;
+        border-radius: 8px;
+        background-color: #000000b5;
+        border: 1px solid black;
+        h2,
+        p,
+        li,
+        strong {
+            color: white;
+            margin: 2px 8px;
+        }
+        img {
+            padding: 8px;
+            width: 300px;
+            height: 400px;
+            object-fit: contain;
+        }
     }
 
     select {
         width: 300px;
-        border-color: #dbdbdb;
+        border-color: #000000;
+        background-color: #000000b1;
+        color: white;
         padding-bottom: calc(0.5em - 1px);
         padding-left: 1em;
         padding-right: 1em;
         padding-top: calc(0.5em - 1px);
         font-size: 1rem;
-        border-radius: 4px;
+        border-radius: 8px 8px 0 0;
 
         &:focus {
             outline: none;
+        }
+
+        &:hover {
+            cursor: pointer;
         }
     }
 
