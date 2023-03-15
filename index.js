@@ -1,8 +1,9 @@
-let selects = document.querySelectorAll(".character-select")
-let compareBtn = document.querySelector("#compare-button")
+const selects = document.querySelectorAll(".character-select")
+const compareBtn = document.querySelector("#compare-button")
+const extraInfo = document.querySelector("#extra-info")
 const leftUl = document.querySelector("#left-container ul")
 const rightUl = document.querySelector("#right-container ul")
-const result = document.querySelector("#compare-list")
+let compareList = document.querySelector("#compare-list")
 
 const starWarsApi = "https://swapi.dev/api"
 
@@ -32,7 +33,6 @@ class Character {
     // returns releasedate for the first movie
     async firstShownDate() {
         const data = await apiGet(this.movies[0])
-        console.log(data.release_date)
         return data.release_date
     }
 
@@ -64,7 +64,7 @@ class Character {
         let result = await Promise.all(promises)
         result = result.filter(obj => obj.cost_in_credits !== "unknown")
         result.sort((a, b) => (Number(a.cost_in_credits) > Number(b.cost_in_credits)) ? -1 : 0)
-        return {name: result[0].name, value: result[0].cost_in_credits}
+        return result.length > 0 ? {name: result[0].name, value: result[0].cost_in_credits} : false
     }
 }
 
@@ -79,9 +79,7 @@ const apiGet = async str => {
 // Fetches all people and continuesly updates the lists
 const oneByOne = false
 const getAllPeople = async () => {
-    console.log("Getting data...")
     if(oneByOne) {
-        console.log("One by one...")
         let data
         const pictureData = await apiGet(`https://rawcdn.githack.com/akabab/starwars-api/0.2.1/api/all.json`)
         for (let i = 0; i < 10; i++) {
@@ -102,7 +100,6 @@ const getAllPeople = async () => {
             }
         }
     }else {
-        console.log("all at once...")
         let promises = []
         let pictureData
         promises.push(apiGet(`https://rawcdn.githack.com/akabab/starwars-api/0.2.1/api/all.json`))
@@ -127,7 +124,6 @@ const getAllPeople = async () => {
         allPeopleData.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
         renderDropdowns()
     }
-    console.log(allPeopleData)
 }
 
 const renderDropdowns = () => {
@@ -191,7 +187,8 @@ selects.forEach((select) => {
         let rightImg = document.querySelector("#right-container img")
         leftUl.innerHTML = ""
         rightUl.innerHTML = ""
-        result.innerHTML = ""
+        extraInfo.innerHTML = ""
+        compareList&& (compareList.innerHTML = "")
         if (this.id === "left-select") {
             allPeopleData.forEach(person => person.name === this.value&& (leftPerson = new Character(person)))
             leftImg.classList.remove("placeholder")
@@ -224,10 +221,6 @@ selects.forEach((select) => {
 
 // Compare button
 compareBtn.addEventListener("click", () => {
-    leftUl.innerHTML = ""
-    rightUl.innerHTML = ""
-    result.innerHTML = ""
-
     const tallest = compareHighest(leftPerson.length, rightPerson.length)
     const heaviest = compareHighest(leftPerson.mass, rightPerson.mass)
     const numberOfMovies = compareHighest(leftPerson.movies.length, rightPerson.movies.length)
@@ -235,6 +228,40 @@ compareBtn.addEventListener("click", () => {
     const sameHairColor = compareSame(leftPerson.hairColor, rightPerson.hairColor)
     const sameSkinColor = compareSame(leftPerson.skinColor, rightPerson.skinColor)
 
+    extraInfo.innerHTML = `
+    <div class="left-container is-flex is-flex-direction-column">
+        <select class="more-info">
+        <option selected hidden disabled>More info</option>
+        <option value="date">First shown</option>
+        <option value="movies">Movies both attended in</option>
+        <option value="homeplanet">Compare homeplanet</option>
+        <option value="vehicle">Most valuble vehicle</option>
+        </select>
+        <p></p>
+        <ul class="left-extra-ul"></ul>
+    </div>
+    <div class="info-container is-flex is-flex-direction-column mx-2">
+        <ul id="compare-list"></ul>
+    </div>
+    <div class="right-container is-flex is-flex-direction-column">
+        <select class="more-info">
+            <option selected hidden disabled>More info</option>
+            <option value="date">First shown</option>
+            <option value="movies">Movies both attended in</option>
+            <option value="homeplanet">Compare homeplanet</option>
+            <option value="vehicle">Most valuble vehicle</option>
+        </select>
+        <p></p>
+        <ul class="right-extra-ul"></ul>
+    </div>`
+    compareList = document.querySelector("#compare-list")
+
+    addMoreInfoEventListeners()
+
+    leftUl.innerHTML = ""
+    rightUl.innerHTML = ""
+    compareList.innerHTML = ""
+    
     for (let i = 0; i < 2; i++) {
         let list = i === 0 ? leftUl : rightUl
         list.innerHTML = `
@@ -250,38 +277,75 @@ compareBtn.addEventListener("click", () => {
 
 
     if (tallest !== undefined) {
-        result.innerHTML = tallest.side === "same" ?
+        compareList.innerHTML = tallest.side === "same" ?
             `<li>Both ${leftPerson.name} and ${rightPerson.name} are the same length.</li>` :
             `<li>${tallest.name} on the ${tallest.side} side is the tallest.</li>`
     }
     if (heaviest !== undefined) {
-        console.log(heaviest)
-        result.innerHTML += heaviest.side === "same" ?
+        compareList.innerHTML += heaviest.side === "same" ?
             `<li>Both ${leftPerson.name} and ${rightPerson.name} weigh the same.</li>` :
             `<li>${heaviest.name} on the ${heaviest.side} side wheigh the most.</li>`
     }
     if (numberOfMovies !== undefined) {
-        result.innerHTML += numberOfMovies.side === "same" ?
+        compareList.innerHTML += numberOfMovies.side === "same" ?
             `<li>They have both starred ${numberOfMovies.value} movie${numberOfMovies.value === 1 ? "" : "s"}.</li>` :
             `<li>${numberOfMovies.name} on the ${numberOfMovies.side} side have played in the most movies.</li>`
     }
-    result.innerHTML += sameGender ?
+    compareList.innerHTML += sameGender ?
         `<li>They are both of the same gender.</li>` :
         `<li>They are not of the same gender.</li>`
-    result.innerHTML += sameHairColor ?
+    compareList.innerHTML += sameHairColor ?
         `<li>They both have the same haircolor.</li>` :
         `<li>They do not have the same haircolor.</li>`
-    result.innerHTML += sameSkinColor ?
+    compareList.innerHTML += sameSkinColor ?
         `<li>They are both ${leftPerson.skinColor} skintone.</li>` :
         `<li>They are of different skintones.</li>`
 })
 
+const addMoreInfoEventListeners = () => {
+    let moreInfo = document.querySelectorAll(".more-info")
+    moreInfo.forEach( (elem, i) => {
+        elem.addEventListener("change", async function() {
+            const left = this.parentElement.classList.contains("left-container")
+            const name = left ? leftPerson.name : rightPerson.name
+            const otherName = !left ? leftPerson.name : rightPerson.name
+            let ul = left ? document.querySelector(".left-extra-ul") : document.querySelector(".right-extra-ul")
+            ul.innerHTML = ""
+            if (this.value === "date"){
+                const date = left ? leftPerson.firstShownDate() : rightPerson.firstShownDate()
+                this.nextElementSibling.innerText = `${name} was first shown in a movie ${await date}.`
+            } else if (this.value === "movies") {
+                const movies = left ? await leftPerson.moviesBothAttended() : await rightPerson.moviesBothAttended()
+                if (movies.length > 0) {
+                    this.nextElementSibling.innerText = `Movies that both attended are:`
+                    movies.forEach(movie => {
+                        let li = document.createElement("li")
+                        li.innerText = `- ${movie}`
+                        ul.append(li)
+                    })
+                } else {
+                    this.nextElementSibling.innerText = `They did not play in any movie toghether with eachother.`
+                }
+            } else if (this.value === "homeplanet") {
+                const homeplanet = left ? await leftPerson.compareHomePlanet() : await rightPerson.compareHomePlanet()
+                if (homeplanet.same) {
+                    this.nextElementSibling.innerText = `${name} share homeplanet named ${homeplanet.left} with ${otherName}.`
+                } else {
+                    this.nextElementSibling.innerText = 
+                        `${name} homeplanet is ${left ? homeplanet.left : homeplanet.right} while ${otherName}s homeplanet is ${!left ? homeplanet.left : homeplanet.right}.`
+                }
+            } else if (this.value === "vehicle") {
+                const vehicle = left ? await leftPerson.mostExpensiveVehicle() : await rightPerson.mostExpensiveVehicle()
+                if (vehicle) {
+                    this.nextElementSibling.innerText = `${name} most expensive vehicle are the ${await vehicle.name} worth a whoping ${vehicle.value}credits.`
+                } else {
+                    this.nextElementSibling.innerText = `${name} dont own any vehicles.`
+                }
+            }
+        })
+    });
+}
+
 //? Running code -----------------------------------------------------------------------
 
 getAllPeople() // Fetches all people and fills the dropdown
-
-
-
-// document.querySelector("#test-button").addEventListener("click", async () => {
-//     console.log(await leftPerson.mostExpensiveVehicle())
-// })

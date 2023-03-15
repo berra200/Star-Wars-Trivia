@@ -9,6 +9,7 @@
   }
   main {
     width: 90%;
+    max-width: 900px;
   }
   img {
     width: 300px;
@@ -67,6 +68,15 @@
     height: 400px;
     -o-object-fit: contain;
        object-fit: contain;
+  }
+  #compare-list {
+    padding: 4px;
+  }
+  #compare-list li {
+    border-bottom: 2px solid grey;
+  }
+  #compare-list li:last-of-type {
+    border-bottom: none;
   }
   select {
     width: 300px;
