@@ -30,6 +30,7 @@
   }
   .middle-container button {
     padding: 8px 35px;
+    margin: 8px;
     background-color: rgba(0, 0, 0, 0.6941176471);
     color: white;
     border-color: #000000;
@@ -69,6 +70,13 @@
     -o-object-fit: contain;
        object-fit: contain;
   }
+  .left-container .select-err,
+  .right-container .select-err,
+  .info-container .select-err {
+    color: red;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
   #compare-list {
     padding: 4px;
   }
@@ -95,9 +103,5 @@
   }
   select:hover {
     cursor: pointer;
-  }
-  .select-err {
-    color: red;
-    font-size: 0.75rem;
   }
 }/*# sourceMappingURL=style.css.map */

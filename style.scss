@@ -36,6 +36,7 @@
         }
         button {
             padding: 8px 35px;
+            margin: 8px;
             background-color: #000000b1;
             color: white;
             border-color: #000000;
@@ -67,7 +68,13 @@
             height: 400px;
             object-fit: contain;
         }
+        .select-err {
+            color: red;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
     }
+
     
     #compare-list {
         padding: 4px;
@@ -78,7 +85,7 @@
             }
         }
     }
-
+    
     select {
         width: 300px;
         border-color: #000000;
@@ -90,19 +97,13 @@
         padding-top: calc(0.5em - 1px);
         font-size: 1rem;
         border-radius: 8px 8px 0 0;
-
+        
         &:focus {
             outline: none;
         }
-
+        
         &:hover {
             cursor: pointer;
         }
     }
-
-    .select-err {
-        color: red;
-        font-size: 0.75rem;
-    }
-
 }
